@@ -2,6 +2,7 @@ package com.example.project_hackaton.services;
 
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class UserService {
         log.warn("Deleting user with id: {}",id);
         if (!userRepository.existsById(id)){
             log.error("User with id: {} not found",id);
-            throw new RuntimeException("User not found");
+            throw new EntityNotFoundException("User not found");
         }
         userRepository.deleteById(id);
     }
@@ -29,20 +30,14 @@ public class UserService {
 
     public Optional<User> findByUsername(String username){
         log.info("Finding user by username: {}",username);
-        if(!userRepository.findByUsername(username).isPresent()){
-            log.error("User with username: {} not found",username);
-            throw new RuntimeException("User not found");
-        }
-        return userRepository.findByUsername(username);
+        return Optional.ofNullable(userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
 
     public Optional<User> findByEmail(String email){
         log.info("Finding user by email: {}",email);
-        if(!userRepository.findByEmail(email).isPresent()){
-            log.error("User with email: {} not found",email);
-            throw new RuntimeException("User not found");
-        }
-        return userRepository.findByEmail(email);
+        return Optional.ofNullable(userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
 
     public User updateUser(Long id, User updateUser){
@@ -65,7 +60,7 @@ public class UserService {
         log.info("Saving user: {}",user.getUsername());
         if(!isUserValid(user)){
             log.error("User is not valid");
-            throw new RuntimeException("User is not valid");
+            throw new EntityNotFoundException("User is not valid");
         }
         return userRepository.save(user);
     }
