@@ -5,6 +5,7 @@ import com.example.project_hackaton.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class UserService {
-    private final Logger log;
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
     public void deleteUser(Long id){
