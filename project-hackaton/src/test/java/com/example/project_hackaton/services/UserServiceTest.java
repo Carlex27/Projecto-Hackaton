@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,8 +27,8 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    private List<User> users;
     private User user;
-
 
     /**
      * Se ejecuta antes de cada test
@@ -36,12 +37,20 @@ class UserServiceTest {
      */
     @BeforeEach
     void setUp(){
-        user = new User();
+       User user = new User();
         user.setId(1L);
         user.setUsername("test");
-        user.setEmail("test@example.com@");
+        user.setEmail("test@example.com");
         user.setPassword("test");
         user.setRole("USER");
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("test2");
+        user2.setEmail("text2@example.com");
+        user2.setPassword("test2");
+        user2.setRole("ADMIN");
+        users = List.of(user, user2);
+        userRepository.saveAll(users);
     }
 
 
@@ -50,10 +59,10 @@ class UserServiceTest {
      */
     @Test
     void deleteUser_existingUser() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(userRepository).deleteById(1L);
-        userService.deleteUser(1L);
-        verify(userRepository, times(1)).deleteById(1L);
+        when(userRepository.existsById(2L)).thenReturn(true);
+        doNothing().when(userRepository).deleteById(2L);
+        userService.deleteUser(2L);
+        verify(userRepository, times(1)).deleteById(2L);
     }
 
     @Test
