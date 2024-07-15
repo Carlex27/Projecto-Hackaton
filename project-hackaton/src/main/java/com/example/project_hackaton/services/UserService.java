@@ -17,46 +17,17 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
-    public void deleteUser(Long id){
-        log.warn("Deleting user with id: {}",id);
-        if (!userRepository.existsById(id)){
-            log.error("User with id: {} not found",id);
-            throw new EntityNotFoundException("User not found");
+    //CRUD
+
+    //CREATE
+    public List<User> saveUsers(List<User> users){
+        log.info("Saving users: {}",users);
+        if(users.stream().anyMatch(user -> !isUserValid(user))){
+            log.error("Some users are not valid");
+            throw new EntityNotFoundException("Some users are not valid");
         }
-        userRepository.deleteById(id);
+        return userRepository.saveAll(users);
     }
-    public void deleteUser(String username){
-        deleteUser(findByUsername(username).get().getId());
-    }
-
-    public Optional<User> findByUsername(String username){
-        log.info("Finding user by username: {}",username);
-        return Optional.ofNullable(userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User not found")));
-    }
-
-    public Optional<User> findByEmail(String email){
-        log.info("Finding user by email: {}",email);
-        return Optional.ofNullable(userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found")));
-    }
-
-    public User updateUser(Long id, User updateUser){
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found id: " + id));
-        existingUser.setUsername(updateUser.getUsername());
-        existingUser.setEmail(updateUser.getEmail());
-        existingUser.setPassword(updateUser.getPassword());
-        existingUser.setRole(updateUser.getRole());
-        log.info("Updating user with id: {}",id);
-        return userRepository.save(existingUser);
-    }
-
-    public List<User> findAllByRole(String role){
-        log.info("Finding all users by role: {}",role);
-        return userRepository.findAllByRole(role);
-    }
-
     public User saveUser(User user){
         log.info("Saving user: {}",user.getUsername());
         if(!isUserValid(user)){
@@ -72,5 +43,56 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    //READ
+
+    public Optional<User> findByUsername(String username){
+        log.info("Finding user by username: {}",username);
+        return Optional.ofNullable(userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
+    }
+
+    public Optional<User> findByEmail(String email){
+        log.info("Finding user by email: {}",email);
+        return Optional.ofNullable(userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
+    }
+    public List<User> findAllByRole(String role){
+        log.info("Finding all users by role: {}",role);
+        return userRepository.findAllByRole(role);
+    }
+    public List<User> findAll(){
+        log.info("Finding all users");
+        return userRepository.findAll();
+    }
+    //UPDATE
+    public User updateUser(Long id, User updateUser){
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found id: " + id));
+        existingUser.setUsername(updateUser.getUsername());
+        existingUser.setEmail(updateUser.getEmail());
+        existingUser.setPassword(updateUser.getPassword());
+        existingUser.setRole(updateUser.getRole());
+        log.info("Updating user with id: {}",id);
+        return userRepository.save(existingUser);
+    }
+    public User updateUser(String username, User updateUser){
+        Long idUser = findByUsername(username).get().getId();
+        return updateUser(idUser,updateUser);
+    }
+    //DELETE
+
+
+    public void deleteUser(Long id){
+        log.warn("Deleting user with id: {}",id);
+        if (!userRepository.existsById(id)){
+            log.error("User with id: {} not found",id);
+            throw new EntityNotFoundException("User not found");
+        }
+        userRepository.deleteById(id);
+    }
+    public void deleteUser(String username){
+        deleteUser(findByUsername(username).get().getId());
     }
 }

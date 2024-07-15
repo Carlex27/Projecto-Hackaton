@@ -12,4 +12,6 @@ public interface TeamsRepository extends JpaRepository<Teams, Long> {
     Optional<Teams> findByName(String name);
     List<Teams> findAllByEventId(Long eventId);
     Optional<Teams> findByNameAndEventId(String name, Long eventId);
+    void deleteByName(String name);
+    void deleteByNameAndEventId(String name, Long eventId);
 }
