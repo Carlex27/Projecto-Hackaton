@@ -6,6 +6,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +18,10 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService{
     private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     //CRUD
 
     //CREATE
@@ -26,6 +31,8 @@ public class UserService {
             log.error("Some users are not valid");
             throw new EntityNotFoundException("Some users are not valid");
         }
+
+        users.forEach(user -> user.setPassword(passwordEncoder.encode(user.getPassword())));
         return userRepository.saveAll(users);
     }
     public User saveUser(User user){
@@ -34,6 +41,11 @@ public class UserService {
             log.error("User is not valid");
             throw new EntityNotFoundException("User is not valid");
         }
+        if (user.getPassword() == null) {
+            log.error("Password cannot be null");
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
     private boolean isUserValid(User user){
@@ -93,6 +105,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
     public void deleteUser(String username){
-        deleteUser(findByUsername(username).get().getId());
+        Long idUser = findByUsername(username).get().getId();
+        deleteUser(idUser);
     }
+
+
 }
