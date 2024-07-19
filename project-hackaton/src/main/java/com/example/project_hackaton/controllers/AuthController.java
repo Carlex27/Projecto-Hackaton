@@ -1,6 +1,6 @@
 package com.example.project_hackaton.controllers;
 
-import com.example.project_hackaton.dto.Login;
+import com.example.project_hackaton.dto.LoginDTO;
 import com.example.project_hackaton.dto.SignUp;
 import com.example.project_hackaton.dto.Token;
 import com.example.project_hackaton.entities.User;
@@ -36,7 +36,7 @@ public class AuthController {
     @Autowired
     DaoAuthenticationProvider daoAuthenticationProvider;
 
-    @Autowired  
+    @Autowired
     @Qualifier("jwtRefreshTokenAuthProvider")
     JwtAuthenticationProvider refreshTokenAuthProvider;
 
@@ -48,7 +48,7 @@ public class AuthController {
         return  ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody Login loginDTO) {
+    public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));

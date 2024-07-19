@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,10 +105,5 @@ public class UserService{
         }
         userRepository.deleteById(id);
     }
-    public void deleteUser(String username){
-        Long idUser = findByUsername(username).get().getId();
-        deleteUser(idUser);
-    }
-
 
 }
