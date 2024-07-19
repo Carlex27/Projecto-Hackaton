@@ -6,14 +6,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,6 +99,10 @@ public class UserService{
             throw new EntityNotFoundException("User not found");
         }
         userRepository.deleteById(id);
+    }
+    public void deleteUser(String username){
+        Long idUser = findByUsername(username).get().getId();
+        deleteUser(idUser);
     }
 
 }
