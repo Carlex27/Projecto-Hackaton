@@ -1,22 +1,17 @@
 package com.example.project_hackaton.controllers;
 
-import com.example.project_hackaton.dto.AuthRequest;
 import com.example.project_hackaton.dto.Login;
 import com.example.project_hackaton.dto.SignUp;
 import com.example.project_hackaton.dto.Token;
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.security.TokenGenerator;
-import com.example.project_hackaton.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
@@ -26,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.Collections;
 
 @RestController
@@ -42,7 +36,7 @@ public class AuthController {
     @Autowired
     DaoAuthenticationProvider daoAuthenticationProvider;
 
-    @Autowired
+    @Autowired  
     @Qualifier("jwtRefreshTokenAuthProvider")
     JwtAuthenticationProvider refreshTokenAuthProvider;
 
