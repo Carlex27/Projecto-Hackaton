@@ -28,6 +28,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -35,14 +36,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 public class WebSecurityConfig {
     @Autowired
-    JWTtoUserConvertor jwTtoUserConvertor;
+    private JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
 
     @Autowired
-    KeyUtils keyUtils;
+    private JWTtoUserConvertor jwTtoUserConvertor;
+
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private KeyUtils keyUtils;
     @Autowired
-    UserDetailsManager userDetailsManager;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserDetailsManager userDetailsManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
@@ -57,6 +61,7 @@ public class WebSecurityConfig {
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwTtoUserConvertor)))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));

@@ -3,8 +3,13 @@ package com.example.project_hackaton.security;
 import com.example.project_hackaton.dto.Token;
 import com.example.project_hackaton.entities.User;
 import com.nimbusds.jwt.JWT;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -19,6 +24,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Component
+@RequiredArgsConstructor
 public class TokenGenerator {
     @Autowired
     JwtEncoder accessTokenEncoder;
@@ -26,6 +32,10 @@ public class TokenGenerator {
     @Autowired
     @Qualifier("jwtRefreshTokenEncoder")
     JwtEncoder refreshTokenEncoder;
+
+
+    @Value("${jwt.cookie.expires}")
+    private int COOKIE_EXPIRES;
 
     private String createAccessToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
@@ -53,7 +63,7 @@ public class TokenGenerator {
         return refreshTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 
-    public Token createToken(Authentication authentication){
+    public Token createToken(Authentication authentication, HttpServletResponse response){
         if(!(authentication.getPrincipal() instanceof User user)){
             throw new BadCredentialsException(
                     MessageFormat.format("Principal {0} is not of User type", authentication.getPrincipal().getClass())
@@ -61,7 +71,8 @@ public class TokenGenerator {
         }
         Token tokenDTO = new Token();
         tokenDTO.setUserId(user.getUsername());
-        tokenDTO.setAccessToken(createAccessToken(authentication));
+        String accessToken = createAccessToken(authentication);
+        tokenDTO.setAccessToken(accessToken);
 
         String refreshToken;
         if(authentication.getCredentials() instanceof Jwt jwt){
@@ -78,7 +89,22 @@ public class TokenGenerator {
             refreshToken = createRefreshToken(authentication);
         }
         tokenDTO.setRefreshToken(refreshToken);
+
+        createJwtCookie(response, accessToken);
         return tokenDTO;
+    }
+    public void createJwtCookie(HttpServletResponse response, String jwtToken) {
+        // Crear la cookie
+        Cookie jwtCookie = new Cookie("JWT", jwtToken);
+
+        // Configurar la cookie
+        jwtCookie.setHttpOnly(true); // La cookie no es accesible mediante JavaScript
+        jwtCookie.setPath("/"); // La cookie es accesible desde todo el dominio
+        // jwtCookie.setSecure(true); // Descomentar esta línea si estás usando HTTPS
+        jwtCookie.setMaxAge(COOKIE_EXPIRES); // La cookie expira en 7 días
+
+        // Añadir la cookie a la respuesta
+        response.addCookie(jwtCookie);
     }
 
 }

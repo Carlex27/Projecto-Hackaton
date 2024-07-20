@@ -48,3 +48,7 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+jwt:
+  cookie:
+    expires: 604800 # 7 days in seconds

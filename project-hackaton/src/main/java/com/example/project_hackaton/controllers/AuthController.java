@@ -6,6 +6,7 @@ import com.example.project_hackaton.dto.Token;
 import com.example.project_hackaton.entities.Rol;
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.security.TokenGenerator;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,27 +44,30 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Token> register(
-            @RequestBody SignUp signUpDTO){
+            @RequestBody SignUp signUpDTO,
+            HttpServletResponse response){
         User user = new User(signUpDTO.getUsername(),signUpDTO.getEmail(),signUpDTO.getPassword(), Rol.USER);
         userDetailsManager.createUser(user);
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signUpDTO.getPassword(), Collections.EMPTY_LIST);
-        return  ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        return  ResponseEntity.ok(tokenGenerator.createToken(authentication, response));
     }
     @PostMapping("/login")
     public ResponseEntity<Token> login(
-            @RequestBody LoginDTO loginDTO) {
+            @RequestBody LoginDTO loginDTO,
+            HttpServletResponse response) {
         Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        return ResponseEntity.ok(tokenGenerator.createToken(authentication, response));
     }
 
     @PostMapping("/token")
     public ResponseEntity<Token> token(
-            @RequestBody Token tokenDTO) {
+            @RequestBody Token tokenDTO,
+            HttpServletResponse response) {
         Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
         Jwt jwt = (Jwt) authentication.getCredentials();
         // check if present in db and not revoked, etc
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        return ResponseEntity.ok(tokenGenerator.createToken(authentication, response));
     }
 }
