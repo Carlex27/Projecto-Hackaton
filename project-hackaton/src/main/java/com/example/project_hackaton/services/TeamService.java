@@ -4,6 +4,7 @@ import com.example.project_hackaton.entities.Event;
 import com.example.project_hackaton.entities.Teams;
 import com.example.project_hackaton.repositories.TeamsRepository;
 import com.example.project_hackaton.services.interfaces.IEventService;
+import com.example.project_hackaton.services.interfaces.ITeamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class TeamService {
+public class TeamService implements ITeamService {
 
     private final Logger log = LoggerFactory.getLogger(TeamService.class);
     private final TeamsRepository teamsRepository;
@@ -52,15 +53,15 @@ public class TeamService {
         return teamsRepository.save(team);
     }
     //READ
-    public Teams getTeamByName(String name){
+    public Optional<Teams> getTeamByName(String name){
         log.info("Finding team by name: {}", name);
-        return teamsRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " not found"));
+        return Optional.ofNullable(teamsRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " not found")));
     }
-    public Teams getTeamById(Long id) {
+    public Optional<Teams> getTeamById(Long id) {
         log.info("Finding team by id: {}", id);
-        return teamsRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Team with id " + id + " not found"));
+        return Optional.ofNullable(teamsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Team with id " + id + " not found")));
     }
 
     public List<Teams> getAllTeams() {
@@ -73,10 +74,10 @@ public class TeamService {
         return teamsRepository.findAllByEventId(eventId);
     }
 
-    public Teams getTeamByNameAndEventId(String name, Long eventId) {
+    public Optional<Teams> getTeamByNameAndEventId(String name, Long eventId) {
         log.info("Finding team by name: {} and event id: {}", name, eventId);
-        return teamsRepository.findByNameAndEventId(name, eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " and event id " + eventId + " not found"));
+        return Optional.ofNullable(teamsRepository.findByNameAndEventId(name, eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " and event id " + eventId + " not found")));
     }
 
     //UPDATE
@@ -90,7 +91,9 @@ public class TeamService {
     }
 
     public Teams updateTeam(String name, Teams updateTeam){
-        Long idTeam = getTeamByName(name).getId();
+        Long idTeam = teamsRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " not found"))
+                .getId();
         return updateTeam(idTeam, updateTeam);
     }
     //DELETE
