@@ -46,9 +46,16 @@ public class AuthController {
     public ResponseEntity<Token> register(
             @RequestBody SignUp signUpDTO,
             HttpServletResponse response){
-        User user = new User(signUpDTO.getUsername(),signUpDTO.getEmail(),signUpDTO.getPassword(), Rol.USER);
+
+        User user = new User(signUpDTO.getUsername().toLowerCase(),
+                signUpDTO.getEmail().toLowerCase(),
+                signUpDTO.getPassword(),
+                Rol.USER);
         userDetailsManager.createUser(user);
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signUpDTO.getPassword(), Collections.EMPTY_LIST);
+
+        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user,
+                signUpDTO.getPassword(),
+                Collections.EMPTY_LIST);
         return  ResponseEntity.ok(tokenGenerator.createToken(authentication, response));
     }
     @PostMapping("/login")

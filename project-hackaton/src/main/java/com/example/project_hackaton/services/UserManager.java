@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.Optional;
@@ -21,10 +22,15 @@ public class UserManager implements UserDetailsManager {
     PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public void createUser(UserDetails user) {
-        ((User) user).setPassword(passwordEncoder.encode(user.getPassword()));
-        // Save the user in the repository
-        userRepository.save((User) user);
+        try {
+            ((User) user).setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save((User) user);
+        } catch (Exception e) {
+            // Log the exception details here
+            throw new RuntimeException("Failed to create user", e);
+        }
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.example.project_hackaton.controllers;
 
 import com.example.project_hackaton.dto.UserDTO;
-import com.example.project_hackaton.entities.Rol;
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.services.UserSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +21,12 @@ public class UserController {
 
     //READ
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserDTO> user(
+    public ResponseEntity<?> user(
             @AuthenticationPrincipal User user,
             @PathVariable String id) {
         Long userId = Long.parseLong(id);
-        return ResponseEntity.ok(UserDTO.from(userService.findById(userId).orElseThrow()));
+        return ResponseEntity.ok(UserDTO.from(userService.findById(userId)
+                .orElseThrow()));
     }
 
     @GetMapping("/username/{username}")

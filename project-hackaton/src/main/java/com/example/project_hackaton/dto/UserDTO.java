@@ -10,10 +10,7 @@ import lombok.Data;
 public class UserDTO {
     private Long id;
     private String username;
-    public static UserDTO from(User user){
-        return UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .build();
+    public static User from(User user){
+        return user;
     }
 }

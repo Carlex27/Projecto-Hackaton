@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique = true)
@@ -42,6 +42,8 @@ public class User implements UserDetails {
         this.password = password;
         this.role = role;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
