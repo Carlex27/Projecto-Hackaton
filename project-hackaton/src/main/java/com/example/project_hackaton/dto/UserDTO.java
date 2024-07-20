@@ -8,11 +8,11 @@ import lombok.Data;
 @Builder
 @Data
 public class UserDTO {
-    private String id;
+    private Long id;
     private String username;
     public static UserDTO from(User user){
         return UserDTO.builder()
-                .id(String.valueOf(user.getId()))
+                .id(user.getId())
                 .username(user.getUsername())
                 .build();
     }

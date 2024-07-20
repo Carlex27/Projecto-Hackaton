@@ -29,11 +29,20 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
-    private String role;
+    private Rol role;
+
     public User(String username,String password){
         this.username = username;
         this.password = password;
     }
+
+    public User(String username, String email, String password, Rol role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

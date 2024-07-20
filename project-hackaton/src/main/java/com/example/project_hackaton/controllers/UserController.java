@@ -1,9 +1,13 @@
 package com.example.project_hackaton.controllers;
 
+import com.example.project_hackaton.dto.UserDTO;
+import com.example.project_hackaton.entities.Rol;
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.services.UserSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,17 +22,25 @@ public class UserController {
     //CREATE
 
     //READ
-    @GetMapping("/{username}")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserDTO> user(
+            @AuthenticationPrincipal User user,
+            @PathVariable String id) {
+        Long userId = Long.parseLong(id);
+        return ResponseEntity.ok(UserDTO.from(userService.findById(userId).orElseThrow()));
+    }
+
+    @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(
             @PathVariable String username){
         return ResponseEntity.ok(userService.findByUsername(username).get());
     }
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(
             @PathVariable String email){
         return ResponseEntity.ok(userService.findByEmail(email).get());
     }
-    @GetMapping("/{role}")
+    @GetMapping("/role/{role}")
     public ResponseEntity<List<User>> getAllUsersByRole(
             @PathVariable String role){
         return ResponseEntity.ok(userService.findAllByRole(role));

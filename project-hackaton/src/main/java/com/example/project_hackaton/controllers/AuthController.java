@@ -3,6 +3,7 @@ package com.example.project_hackaton.controllers;
 import com.example.project_hackaton.dto.LoginDTO;
 import com.example.project_hackaton.dto.SignUp;
 import com.example.project_hackaton.dto.Token;
+import com.example.project_hackaton.entities.Rol;
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.security.TokenGenerator;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Token> register(
             @RequestBody SignUp signUpDTO){
-        User user = new User(signUpDTO.getUsername(),signUpDTO.getPassword());
+        User user = new User(signUpDTO.getUsername(),signUpDTO.getEmail(),signUpDTO.getPassword(), Rol.USER);
         userDetailsManager.createUser(user);
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signUpDTO.getPassword(), Collections.EMPTY_LIST);
         return  ResponseEntity.ok(tokenGenerator.createToken(authentication));

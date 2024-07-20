@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 
 public enum Rol {
-    LIDER,
-    MIEMBRO
+    USER,
+    ADMIN,
+    LEADER,
+    MEMBER
 }

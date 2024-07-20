@@ -21,6 +21,8 @@ public class TeamService {
     private final TeamsRepository teamsRepository;
     private final IEventService eventService;
 
+    //CRUD
+    //CREATE
     public Teams createTeam(String teamName, String eventName){
         log.info("Creating team with name: {} in the event name: {}", teamName, eventName);
         Optional<Event> event = eventService.getEventByName(eventName);
@@ -49,21 +51,7 @@ public class TeamService {
                 .build();
         return teamsRepository.save(team);
     }
-
-    public Teams updateTeam(Long id, Teams updateTeam){
-        Teams existingTeam = teamsRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Team not found id: " + id));
-        existingTeam.setName(updateTeam.getName());
-        existingTeam.setEvent(updateTeam.getEvent());
-        log.info("Updating team with id: {}",id);
-        return teamsRepository.save(existingTeam);
-    }
-
-    public Teams updateTeam(String name, Teams updateTeam){
-        Long idTeam = getTeamByName(name).getId();
-        return updateTeam(idTeam, updateTeam);
-    }
-
+    //READ
     public Teams getTeamByName(String name){
         log.info("Finding team by name: {}", name);
         return teamsRepository.findByName(name)
@@ -91,6 +79,21 @@ public class TeamService {
                 .orElseThrow(() -> new EntityNotFoundException("Team with name " + name + " and event id " + eventId + " not found"));
     }
 
+    //UPDATE
+    public Teams updateTeam(Long id, Teams updateTeam){
+        Teams existingTeam = teamsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Team not found id: " + id));
+        existingTeam.setName(updateTeam.getName());
+        existingTeam.setEvent(updateTeam.getEvent());
+        log.info("Updating team with id: {}",id);
+        return teamsRepository.save(existingTeam);
+    }
+
+    public Teams updateTeam(String name, Teams updateTeam){
+        Long idTeam = getTeamByName(name).getId();
+        return updateTeam(idTeam, updateTeam);
+    }
+    //DELETE
     public void deleteTeam(Long id) {
         log.warn("Deleting team with id: {}", id);
         teamsRepository.deleteById(id);
@@ -103,4 +106,5 @@ public class TeamService {
         log.warn("Deleting team with name: {} and event id: {}", name, eventId);
         teamsRepository.deleteByNameAndEventId(name, eventId);
     }
+
 }

@@ -32,7 +32,7 @@ public class TokenGenerator {
         Instant now = Instant.now();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("myApp")
+                .issuer("ProjectHackaton")
                 .issuedAt(now)
                 .expiresAt(now.plus(5, ChronoUnit.MINUTES))
                 .subject(user.getUsername())
@@ -45,7 +45,7 @@ public class TokenGenerator {
         Instant now = Instant.now();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("myApp")
+                .issuer("ProjectHackaton")
                 .issuedAt(now)
                 .expiresAt(now.plus(30, ChronoUnit.DAYS))
                 .subject(user.getUsername())
