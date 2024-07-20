@@ -29,22 +29,41 @@ public class UserManager implements UserDetailsManager {
 
     @Override
     public void updateUser(UserDetails user) {
-        
+        User userToUpdate = (User) user;
+        User existingUser = userRepository.findByUsername(userToUpdate.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        MessageFormat.format(
+                                "User with username {0} not found", userToUpdate.getUsername())));
+        userToUpdate.setUsername(existingUser.getUsername());
+        userToUpdate.setEmail(existingUser.getEmail());
+        userToUpdate.setRole(existingUser.getRole());
+        userRepository.save(userToUpdate);
     }
 
     @Override
     public void deleteUser(String username) {
-
+        // Delete the user from the repository by username
+        if(!userRepository.existsByUsername(username)){
+            throw new UsernameNotFoundException(MessageFormat.format("User with username {0} not found", username));
+        }
+        userRepository.deleteByUsername(username);
     }
 
     @Override
     public void changePassword(String oldPassword, String newPassword) {
-
+        // Change the password of the user in the repository
+        User user = userRepository.findByPassword(oldPassword)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        MessageFormat.format(
+                                "User with password {0} not found", oldPassword)));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     @Override
     public boolean userExists(String username) {
-        return false;
+        // Check if the user exists in the repository by username
+        return userRepository.existsByUsername(username);
     }
 
     @Override
