@@ -1,4 +1,4 @@
-package com.example.project_hackaton.security;
+package com.example.project_hackaton.services;
 
 import com.example.project_hackaton.entities.User;
 import com.example.project_hackaton.repositories.UserRepository;
