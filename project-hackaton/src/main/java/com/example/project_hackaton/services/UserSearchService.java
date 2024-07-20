@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserService{
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+public class UserSearchService {
+    private final Logger log = LoggerFactory.getLogger(UserSearchService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     //CRUD

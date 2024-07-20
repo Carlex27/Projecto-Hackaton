@@ -29,7 +29,7 @@ public class UserManager implements UserDetailsManager {
 
     @Override
     public void updateUser(UserDetails user) {
-
+        
     }
 
     @Override
