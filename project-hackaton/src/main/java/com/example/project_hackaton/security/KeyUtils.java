@@ -68,7 +68,6 @@ public class KeyUtils {
      * @param privateKeyPath
      * @return
      */
-
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath){
         KeyPair keyPair;
 
@@ -94,13 +93,19 @@ public class KeyUtils {
                 throw new RuntimeException(e);
             }
         }else {
-            if(Arrays.stream(environment.getActiveProfiles()).anyMatch(s -> s.equals("prod"))){
+            if(Arrays.asList(environment.getActiveProfiles()).contains("prod")){
                 throw new RuntimeException("public and private key don't exist");
             }
         }
         return tokensDoesNotExist(publicKeyPath, privateKeyPath);
     }
 
+    /**
+     * Generate KeyPair if the keys don't exist
+     * @param publicKeyPath
+     * @param privateKeyPath
+     * @return
+     */
     private KeyPair tokensDoesNotExist(String publicKeyPath, String privateKeyPath){
 
         KeyPair keyPair;
