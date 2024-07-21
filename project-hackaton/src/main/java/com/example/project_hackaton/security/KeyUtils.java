@@ -39,18 +39,36 @@ public class KeyUtils {
     private KeyPair _accessTokenKeyPair;
     private KeyPair _refreshTokenKeyPair;
 
+
+    /**
+     * Get KeyPair for AccessToken
+     * @return
+     */
     private KeyPair getAccessTokenKeyPair(){
         if(Objects.isNull(_accessTokenKeyPair)){
             _accessTokenKeyPair = getKeyPair(accessTokenPublicKeyPath, accessTokenPrivateKeyPath);
         }
         return _accessTokenKeyPair;
     }
+
+    /**
+     * Get KeyPair for RefreshToken
+     * @return
+     */
     private KeyPair getRefreshTokenKeyPair(){
         if(Objects.isNull(_refreshTokenKeyPair)){
             _refreshTokenKeyPair = getKeyPair(refreshTokenPublicKeyPath, refreshTokenPrivateKeyPath);
         }
         return _refreshTokenKeyPair;
     }
+
+    /**
+     * Get KeyPair from the given public and private key path
+     * @param publicKeyPath
+     * @param privateKeyPath
+     * @return
+     */
+
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath){
         KeyPair keyPair;
 
@@ -74,13 +92,19 @@ public class KeyUtils {
                 return keyPair;
             }catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException e){
                 throw new RuntimeException(e);
-
             }
         }else {
             if(Arrays.stream(environment.getActiveProfiles()).anyMatch(s -> s.equals("prod"))){
                 throw new RuntimeException("public and private key don't exist");
             }
         }
+        return tokensDoesNotExist(publicKeyPath, privateKeyPath);
+    }
+
+    private KeyPair tokensDoesNotExist(String publicKeyPath, String privateKeyPath){
+
+        KeyPair keyPair;
+        // Generate key pair
         File directory = new File("access-refresh-token-keys");
         if(!directory.exists()){
             directory.mkdir();
@@ -101,16 +125,38 @@ public class KeyUtils {
             throw new RuntimeException(e);
         }
         return keyPair;
+
     }
+
+    /**
+     * Get Publickey from the AccessToken KeyPair
+     * @return
+     */
     public RSAPublicKey getAccessTokenPublicKey(){
         return (RSAPublicKey) getAccessTokenKeyPair().getPublic();
     }
+
+    /**
+     * Get PrivateKey from the AccessToken KeyPair
+     * @return
+     */
+
     public RSAPrivateKey getAccessTokenPrivateKey(){
         return (RSAPrivateKey) getAccessTokenKeyPair().getPrivate();
     }
+
+    /**
+     * Get Publickey from the RefreshToken KeyPair
+     * @return
+     */
     public  RSAPublicKey getRefreshTokenPublicKey(){
         return (RSAPublicKey) getRefreshTokenKeyPair().getPublic();
     }
+
+    /**
+     * Get PrivateKey from the RefreshToken KeyPair
+     * @return
+     */
     public RSAPrivateKey getRefreshTokenPrivateKey(){
         return (RSAPrivateKey) getRefreshTokenKeyPair().getPrivate();
     }
