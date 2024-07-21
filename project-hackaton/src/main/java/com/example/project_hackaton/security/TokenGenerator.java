@@ -23,20 +23,51 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * TokenGenerator class
+ * This class is used to generate JWT tokens for the user
+ * @version 1.0
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class TokenGenerator {
+    /**
+     * JwtEncoder accessTokenEncoder
+     * This attribute is used to encode the access token
+     */
     @Autowired
     JwtEncoder accessTokenEncoder;
 
+    /**
+     * JwtEncoder refreshTokenEncoder
+     * This attribute is used to encode the refresh token
+     */
     @Autowired
     @Qualifier("jwtRefreshTokenEncoder")
     JwtEncoder refreshTokenEncoder;
 
-
+    /**
+     * int COOKIE_EXPIRES
+     * This attribute is used to store the cookie expiration time
+     */
     @Value("${jwt.cookie.expires}")
     private int COOKIE_EXPIRES;
 
+    @Value("${jwt.access-token.expires}")
+    private int ACCESS_TOKEN_EXPIRES;
+
+    @Value("${jwt.refresh-token.expires}")
+    private int REFRESH_TOKEN_EXPIRES;
+
+
+    /**
+     * String createAccessToken(Authentication authentication)
+     * This method is used to create the access token
+     *
+     * @param authentication
+     * @return
+     */
     private String createAccessToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Instant now = Instant.now();
@@ -44,12 +75,18 @@ public class TokenGenerator {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("ProjectHackaton")
                 .issuedAt(now)
-                .expiresAt(now.plus(5, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(ACCESS_TOKEN_EXPIRES, ChronoUnit.MINUTES))
                 .subject(user.getUsername())
                 .build();
         return accessTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 
+    /**
+     * String createRefreshToken(Authentication authentication)
+     * This method is used to create the refresh token
+     * @param authentication
+     * @return
+     */
     private String createRefreshToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Instant now = Instant.now();
@@ -57,7 +94,7 @@ public class TokenGenerator {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("ProjectHackaton")
                 .issuedAt(now)
-                .expiresAt(now.plus(30, ChronoUnit.DAYS))
+                .expiresAt(now.plus(REFRESH_TOKEN_EXPIRES, ChronoUnit.DAYS))
                 .subject(user.getUsername())
                 .build();
         return refreshTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
@@ -93,6 +130,8 @@ public class TokenGenerator {
         createJwtCookie(response, accessToken);
         return tokenDTO;
     }
+
+
     public void createJwtCookie(HttpServletResponse response, String jwtToken) {
         // Crear la cookie
         Cookie jwtCookie = new Cookie("JWT", jwtToken);
