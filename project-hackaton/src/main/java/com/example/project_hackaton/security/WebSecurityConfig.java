@@ -53,6 +53,9 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/*").permitAll()
+                        .requestMatchers("/public/*").permitAll()
+                        .requestMatchers("/users/*").hasRole("USER")
+                        .requestMatchers("/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
@@ -61,10 +64,12 @@ public class WebSecurityConfig {
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwTtoUserConvertor)))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtCookieAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
+
         return http.build();
     }
 
