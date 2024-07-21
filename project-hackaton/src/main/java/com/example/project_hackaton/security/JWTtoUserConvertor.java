@@ -10,6 +10,8 @@ import java.util.Collections;
 
 @Component
 public class JWTtoUserConvertor implements Converter<Jwt, UsernamePasswordAuthenticationToken> {
+
+
     @Override
     public UsernamePasswordAuthenticationToken convert(Jwt source){
         User user = new User();

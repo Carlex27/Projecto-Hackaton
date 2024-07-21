@@ -7,7 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,6 +39,7 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
             // Aquí deberías validar el token y extraer los detalles del usuario
             // Por ejemplo, asumimos que el token es válido y extraemos el nombre de usuario
             try{
+                //Obtener el bean JwtDecoder
                 JwtDecoder jwtDecoder = applicationContext.getBean(JwtDecoder.class);
                 Jwt jwt = jwtDecoder.decode(jwtToken);
                 String username = jwt.getClaimAsString("sub"); // Reemplaza esto con la lógica de extracción real
