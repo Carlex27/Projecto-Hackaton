@@ -21,6 +21,7 @@ public class TeamMemberService {
     private final IUserSearchService userSearchService;
     private final ITeamService teamService;
     //CRUD
+
     //Create
     public TeamMember createTeamMember(Long idTeam, Long idUser, String rol, boolean isLeader){
         User user = userSearchService.findById(idUser)
@@ -36,6 +37,7 @@ public class TeamMemberService {
                 .build();
         return teamMemberRepository.save(teamMember);
     }
+
     //Read
     public Optional<TeamMember> getTeamMemberById(Long id){
         return teamMemberRepository.findById(id);
@@ -43,6 +45,7 @@ public class TeamMemberService {
     public Optional<TeamMember> getTeamMemberByUserIdAndTeamId(Long idUser, Long idTeam){
         return teamMemberRepository.findByUserIdAndTeamId(idUser, idTeam);
     }
+
     //Update
     public TeamMember updateTeamMember(Long id, Long idTeam, Long idUser, String rol, boolean isLeader){
         TeamMember teamMember = getTeamMemberById(id)
@@ -58,6 +61,7 @@ public class TeamMemberService {
         teamMember.setLeader(isLeader);
         return teamMemberRepository.save(teamMember);
     }
+
     //Delete
     public void deleteTeamMember(Long id){
         teamMemberRepository.deleteById(id);

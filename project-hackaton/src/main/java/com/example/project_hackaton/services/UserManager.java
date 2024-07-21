@@ -26,11 +26,20 @@ public class UserManager implements UserDetailsManager {
     public void createUser(UserDetails user) {
         try {
             ((User) user).setPassword(passwordEncoder.encode(user.getPassword()));
+            if(emailOrUsernameExist((User) user)){
+                throw new RuntimeException("User is not valid");
+            }
             userRepository.save((User) user);
         } catch (Exception e) {
             // Log the exception details here
             throw new RuntimeException("Failed to create user", e);
         }
+
+    }
+
+    private boolean emailOrUsernameExist(User user) {
+        return userRepository.existsByUsername(user.getUsername())
+                || userRepository.existsByEmail(user.getEmail());
     }
 
     @Override

@@ -19,8 +19,10 @@ public class CompetitorService {
     private final IUserSearchService userService;
     private final IEventService eventService;
     //CRUD
+
     //CREATE
     public Competitor createCompetitor(Long userId, Long eventId){
+
         User user = userService.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
         Event event = eventService.getEventById(eventId)
@@ -34,6 +36,7 @@ public class CompetitorService {
 
         return competitorRepository.save(competitor);
     }
+
     //READ
     public Competitor getCompetitorById(Long id) {
         return competitorRepository.findById(id)

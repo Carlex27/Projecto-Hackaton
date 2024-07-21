@@ -19,6 +19,7 @@ public class EventService implements IEventService {
     private final EventRepository eventRepository;
     private final IUserSearchService userService;
     //CRUD
+
     //CREATE
     public Event createEvent(String name, String description, String startDate,String endDate, Long creatorId) {
         User creator = userService.findById(creatorId)
@@ -35,6 +36,7 @@ public class EventService implements IEventService {
                 .build();
         return eventRepository.save(event);
     }
+
     //READ
     @Override
     public Optional<Event> getEventById(Long id) {

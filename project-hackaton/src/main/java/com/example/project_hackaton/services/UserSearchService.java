@@ -20,11 +20,7 @@ public class UserSearchService implements IUserSearchService {
     private final Logger log = LoggerFactory.getLogger(UserSearchService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    //CRUD
 
-    //CREATE
-
-    //READ
     public Optional<User> findById(Long id){
         log.info("Finding user by id: {}",id);
         return Optional.ofNullable(userRepository.findById(id)
@@ -50,9 +46,6 @@ public class UserSearchService implements IUserSearchService {
         log.info("Finding all users");
         return userRepository.findAll();
     }
-    //UPDATE
-
-    //DELETE
 
 
 }

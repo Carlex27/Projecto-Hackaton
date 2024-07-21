@@ -23,6 +23,7 @@ public class TeamService implements ITeamService {
     private final IEventService eventService;
 
     //CRUD
+
     //CREATE
     public Teams createTeam(String teamName, String eventName){
         log.info("Creating team with name: {} in the event name: {}", teamName, eventName);
@@ -52,6 +53,7 @@ public class TeamService implements ITeamService {
                 .build();
         return teamsRepository.save(team);
     }
+
     //READ
     public Optional<Teams> getTeamByName(String name){
         log.info("Finding team by name: {}", name);
@@ -96,6 +98,7 @@ public class TeamService implements ITeamService {
                 .getId();
         return updateTeam(idTeam, updateTeam);
     }
+
     //DELETE
     public void deleteTeam(Long id) {
         log.warn("Deleting team with id: {}", id);
