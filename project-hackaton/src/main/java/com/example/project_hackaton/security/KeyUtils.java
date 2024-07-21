@@ -97,7 +97,7 @@ public class KeyUtils {
                 throw new RuntimeException("public and private key don't exist");
             }
         }
-        return tokensDoesNotExist(publicKeyPath, privateKeyPath);
+        return keysDoesNotExist(publicKeyPath, privateKeyPath);
     }
 
     /**
@@ -106,7 +106,7 @@ public class KeyUtils {
      * @param privateKeyPath
      * @return
      */
-    private KeyPair tokensDoesNotExist(String publicKeyPath, String privateKeyPath){
+    private KeyPair keysDoesNotExist(String publicKeyPath, String privateKeyPath){
 
         KeyPair keyPair;
         // Generate key pair
