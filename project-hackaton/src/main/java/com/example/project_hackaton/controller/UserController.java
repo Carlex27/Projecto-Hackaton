@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +18,6 @@ import java.util.List;
 public class UserController {
     private final UserSearchService userService;
 
-    //CRUD
-    //CREATE
-
-    //READ
     @GetMapping("/user/{id}")
     public ResponseEntity<?> user(
             @AuthenticationPrincipal User user,
@@ -30,11 +27,10 @@ public class UserController {
                 .orElseThrow()));
     }
     @GetMapping("/user")
-    public ResponseEntity<?> user(@AuthenticationPrincipal User user) {
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
-        return ResponseEntity.ok(UserDTO.from(userService.findById(user.getId()).orElseThrow()));
+    public String user(
+            @AuthenticationPrincipal Jwt jwt) {
+        String id = jwt.getClaimAsString("id");
+       return "El nombre de usuario es: " + id;
     }
 
     @GetMapping("/username/{username}")
@@ -57,16 +53,5 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers(){
         return ResponseEntity.ok(userService.findAll());
     }
-    //UPDATE
-
-
-
-    //DELETE
-
-
-
-
-
-
 
 }

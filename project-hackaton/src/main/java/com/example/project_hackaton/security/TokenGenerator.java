@@ -69,7 +69,7 @@ public class TokenGenerator {
     private String createAccessToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Instant now = Instant.now();
-
+        //System.out.println(user.toString());
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("ProjectHackaton")
                 .issuedAt(now)
@@ -89,7 +89,7 @@ public class TokenGenerator {
     private String createRefreshToken(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Instant now = Instant.now();
-
+        //System.out.println(user.toString());
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("ProjectHackaton")
                 .issuedAt(now)
