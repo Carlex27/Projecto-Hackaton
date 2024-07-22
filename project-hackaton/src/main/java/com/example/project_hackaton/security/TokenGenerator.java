@@ -1,11 +1,9 @@
 package com.example.project_hackaton.security;
 
 import com.example.project_hackaton.dto.Token;
-import com.example.project_hackaton.entities.User;
-import com.nimbusds.jwt.JWT;
+import com.example.project_hackaton.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,6 +75,7 @@ public class TokenGenerator {
                 .issuedAt(now)
                 .expiresAt(now.plus(ACCESS_TOKEN_EXPIRES, ChronoUnit.MINUTES))
                 .subject(user.getUsername())
+                .claim("id", user.getId())
                 .build();
         return accessTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
@@ -96,6 +95,7 @@ public class TokenGenerator {
                 .issuedAt(now)
                 .expiresAt(now.plus(REFRESH_TOKEN_EXPIRES, ChronoUnit.DAYS))
                 .subject(user.getUsername())
+                .claim("id", user.getId())
                 .build();
         return refreshTokenEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }

@@ -1,17 +1,16 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Rol;
-import com.example.project_hackaton.entities.TeamMember;
-import com.example.project_hackaton.entities.Teams;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.TeamMemberRepository;
-import com.example.project_hackaton.services.interfaces.ITeamService;
-import com.example.project_hackaton.services.interfaces.IUserSearchService;
+import com.example.project_hackaton.entity.Rol;
+import com.example.project_hackaton.entity.TeamMember;
+import com.example.project_hackaton.entity.Teams;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.TeamMemberRepository;
+import com.example.project_hackaton.service.interfaces.ITeamService;
+import com.example.project_hackaton.service.interfaces.IUserSearchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service

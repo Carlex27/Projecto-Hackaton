@@ -1,7 +1,7 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.UserRepository;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

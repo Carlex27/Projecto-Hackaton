@@ -1,4 +1,4 @@
-package com.example.project_hackaton.entities;
+package com.example.project_hackaton.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,19 +8,18 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Competitor {
+public class Teams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "event_ids")
+    @JoinColumn(name = "event_id")
     private Event event;
+
 }

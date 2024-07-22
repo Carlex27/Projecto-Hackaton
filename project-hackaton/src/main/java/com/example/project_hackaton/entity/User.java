@@ -1,4 +1,4 @@
-package com.example.project_hackaton.entities;
+package com.example.project_hackaton.entity;
 
 
 import jakarta.persistence.*;

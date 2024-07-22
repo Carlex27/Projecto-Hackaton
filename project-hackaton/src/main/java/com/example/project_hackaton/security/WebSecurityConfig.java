@@ -54,8 +54,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/*").permitAll()
                         .requestMatchers("/public/*").permitAll()
-                        .requestMatchers("/users/*").hasRole("USER")
-                        .requestMatchers("/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())

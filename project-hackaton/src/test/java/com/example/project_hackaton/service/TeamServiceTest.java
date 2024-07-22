@@ -1,10 +1,9 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Event;
-import com.example.project_hackaton.entities.Teams;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.TeamsRepository;
-import com.example.project_hackaton.services.interfaces.IEventService;
+import com.example.project_hackaton.entity.Event;
+import com.example.project_hackaton.entity.Teams;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.TeamsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TeamServiceTest {

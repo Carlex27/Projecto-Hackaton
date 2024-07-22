@@ -1,10 +1,10 @@
-package com.example.project_hackaton.controllers;
+package com.example.project_hackaton.controller;
 
 import com.example.project_hackaton.dto.LoginDTO;
 import com.example.project_hackaton.dto.SignUp;
 import com.example.project_hackaton.dto.Token;
-import com.example.project_hackaton.entities.Rol;
-import com.example.project_hackaton.entities.User;
+import com.example.project_hackaton.entity.Rol;
+import com.example.project_hackaton.entity.User;
 import com.example.project_hackaton.security.TokenGenerator;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

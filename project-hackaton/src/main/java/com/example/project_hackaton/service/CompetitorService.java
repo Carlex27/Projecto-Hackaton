@@ -1,11 +1,11 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Competitor;
-import com.example.project_hackaton.entities.Event;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.CompetitorRepository;
-import com.example.project_hackaton.services.interfaces.IEventService;
-import com.example.project_hackaton.services.interfaces.IUserSearchService;
+import com.example.project_hackaton.entity.Competitor;
+import com.example.project_hackaton.entity.Event;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.CompetitorRepository;
+import com.example.project_hackaton.service.interfaces.IEventService;
+import com.example.project_hackaton.service.interfaces.IUserSearchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

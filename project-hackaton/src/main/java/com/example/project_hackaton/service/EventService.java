@@ -1,10 +1,10 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Event;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.EventRepository;
-import com.example.project_hackaton.services.interfaces.IEventService;
-import com.example.project_hackaton.services.interfaces.IUserSearchService;
+import com.example.project_hackaton.entity.Event;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.EventRepository;
+import com.example.project_hackaton.service.interfaces.IEventService;
+import com.example.project_hackaton.service.interfaces.IUserSearchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,19 +21,10 @@ public class EventService implements IEventService {
     //CRUD
 
     //CREATE
-    public Event createEvent(String name, String description, String startDate,String endDate, Long creatorId) {
+    public Event createEvent(Event event, Long creatorId) {
         User creator = userService.findById(creatorId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + creatorId + " not found"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime start = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime end = LocalDateTime.parse(endDate, formatter);
-        Event event = Event.builder()
-                .name(name)
-                .description(description)
-                .startDate(start)
-                .endDate(end)
-                .creator(creator)
-                .build();
+
         return eventRepository.save(event);
     }
 

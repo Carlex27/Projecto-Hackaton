@@ -1,10 +1,10 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Event;
-import com.example.project_hackaton.entities.Teams;
-import com.example.project_hackaton.repositories.TeamsRepository;
-import com.example.project_hackaton.services.interfaces.IEventService;
-import com.example.project_hackaton.services.interfaces.ITeamService;
+import com.example.project_hackaton.entity.Event;
+import com.example.project_hackaton.entity.Teams;
+import com.example.project_hackaton.repository.TeamsRepository;
+import com.example.project_hackaton.service.interfaces.IEventService;
+import com.example.project_hackaton.service.interfaces.ITeamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

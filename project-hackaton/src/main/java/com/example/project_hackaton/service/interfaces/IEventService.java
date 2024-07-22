@@ -1,6 +1,6 @@
-package com.example.project_hackaton.services.interfaces;
+package com.example.project_hackaton.service.interfaces;
 
-import com.example.project_hackaton.entities.Event;
+import com.example.project_hackaton.entity.Event;
 
 import java.util.Optional;
 

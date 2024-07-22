@@ -1,7 +1,7 @@
 package com.example.project_hackaton.dto;
 
 
-import com.example.project_hackaton.entities.User;
+import com.example.project_hackaton.entity.User;
 import lombok.Builder;
 import lombok.Data;
 

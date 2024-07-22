@@ -1,9 +1,10 @@
-package com.example.project_hackaton.controllers;
+package com.example.project_hackaton.controller;
 
 import com.example.project_hackaton.dto.UserDTO;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.services.UserSearchService;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.service.UserSearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,13 @@ public class UserController {
         Long userId = Long.parseLong(id);
         return ResponseEntity.ok(UserDTO.from(userService.findById(userId)
                 .orElseThrow()));
+    }
+    @GetMapping("/user")
+    public ResponseEntity<?> user(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+        return ResponseEntity.ok(UserDTO.from(userService.findById(user.getId()).orElseThrow()));
     }
 
     @GetMapping("/username/{username}")

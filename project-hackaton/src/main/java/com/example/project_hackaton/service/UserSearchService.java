@@ -1,9 +1,9 @@
-package com.example.project_hackaton.services;
+package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entities.Rol;
-import com.example.project_hackaton.entities.User;
-import com.example.project_hackaton.repositories.UserRepository;
-import com.example.project_hackaton.services.interfaces.IUserSearchService;
+import com.example.project_hackaton.entity.Rol;
+import com.example.project_hackaton.entity.User;
+import com.example.project_hackaton.repository.UserRepository;
+import com.example.project_hackaton.service.interfaces.IUserSearchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

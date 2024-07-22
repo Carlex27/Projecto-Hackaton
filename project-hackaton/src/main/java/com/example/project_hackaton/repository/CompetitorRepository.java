@@ -1,6 +1,6 @@
-package com.example.project_hackaton.repositories;
+package com.example.project_hackaton.repository;
 
-import com.example.project_hackaton.entities.Competitor;
+import com.example.project_hackaton.entity.Competitor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
