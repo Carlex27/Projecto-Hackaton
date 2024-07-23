@@ -25,7 +25,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserSearchService userService;
+    private UserService userService;
 
     private List<User> users;
     private User user;

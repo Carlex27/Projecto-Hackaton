@@ -1,4 +1,4 @@
-package com.example.project_hackaton.service;
+package com.example.project_hackaton.service.jwtService;
 
 
 import com.example.project_hackaton.dto.TokenType;

@@ -5,7 +5,7 @@ import com.example.project_hackaton.config.jwtAuth.JwtRefreshTokenFilter;
 import com.example.project_hackaton.config.jwtAuth.JwtTokenUtils;
 import com.example.project_hackaton.config.userConfig.UserManagerConfig;
 import com.example.project_hackaton.repository.RefreshTokenRepository;
-import com.example.project_hackaton.service.LogoutHandlerService;
+import com.example.project_hackaton.service.jwtService.LogoutHandlerService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

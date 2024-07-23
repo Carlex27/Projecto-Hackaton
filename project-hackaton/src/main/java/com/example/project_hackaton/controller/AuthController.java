@@ -2,7 +2,7 @@ package com.example.project_hackaton.controller;
 
 
 import com.example.project_hackaton.dto.UserRegistrationDto;
-import com.example.project_hackaton.service.AuthService;
+import com.example.project_hackaton.service.jwtService.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
