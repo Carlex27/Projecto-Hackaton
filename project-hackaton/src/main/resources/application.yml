@@ -1,14 +1,5 @@
-access-token:
-  private: ${ACCESS_TOKEN_PRIVATE_KEY_PATH}
-  public: ${ACCESS_TOKEN_PUBLIC_KEY_PATH}
-
-refresh-token:
-  private: ${REFRESH_TOKEN_PRIVATE_KEY_PATH}
-  public: ${REFRESH_TOKEN_PUBLIC_KEY_PATH}
 
 spring:
-  profiles:
-    active: dev
   application:
     name: project-hackaton
 
@@ -44,11 +35,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://your-identity-provider.com
-
-logging:
-  level:
-    org.springframework.security: DEBUG
+  logging:
+    level:
+      org.springframework.security: trace
 
 jwt:
-  cookie:
-    expires: 604800 # 7 days in seconds
+  rsa-private-key: classpath:certs/privateKey.pem
+  rsa-public-key: classpath:certs/publicKey.pem

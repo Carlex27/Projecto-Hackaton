@@ -1,11 +1,13 @@
 package com.example.project_hackaton;
 
+
+import com.example.project_hackaton.config.RSAKeyRecord;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+
+@EnableConfigurationProperties(RSAKeyRecord.class)
 @SpringBootApplication
 public class ProjectHackatonApplication {
 

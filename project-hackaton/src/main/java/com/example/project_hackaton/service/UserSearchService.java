@@ -19,7 +19,6 @@ import java.util.Optional;
 public class UserSearchService implements IUserSearchService {
     private final Logger log = LoggerFactory.getLogger(UserSearchService.class);
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public Optional<User> findById(Long id){
         log.info("Finding user by id: {}",id);
@@ -37,11 +36,7 @@ public class UserSearchService implements IUserSearchService {
         return Optional.ofNullable(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
-    public List<User> findAllByRole(String role){
-        log.info("Finding all users by role: {}",role);
-        Rol roleToSearch = Rol.valueOf(role);
-        return userRepository.findAllByRole(roleToSearch);
-    }
+
     public List<User> findAll(){
         log.info("Finding all users");
         return userRepository.findAll();
