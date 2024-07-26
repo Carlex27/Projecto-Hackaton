@@ -19,6 +19,31 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.findAll());
     }
-    
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/find/{id}")
+    public ResponseEntity<?> findUserById(
+            @PathVariable Long id
+    ){
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/find/username/{username}")
+    public ResponseEntity<?> findUserByUsername(
+            @PathVariable String username
+    ){
+        return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/find/email/{email}")
+    public ResponseEntity<?> findUserByEmail(
+            @PathVariable String email
+    ){
+        return ResponseEntity.ok(userService.findByEmail(email));
+    }
+
+
 
 }

@@ -24,8 +24,7 @@ public class TeamMember {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
+    private String rol;
 
     private boolean isLeader;
 
