@@ -1,6 +1,5 @@
 package com.example.project_hackaton.service;
 
-import com.example.project_hackaton.entity.Rol;
 import com.example.project_hackaton.entity.TeamMember;
 import com.example.project_hackaton.entity.Teams;
 import com.example.project_hackaton.entity.User;
@@ -27,11 +26,11 @@ public class TeamMemberService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Teams team = teamService.getTeamById(idTeam)
                 .orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        Rol teamRol = Rol.valueOf(rol);
+
         TeamMember teamMember = TeamMember.builder()
                 .team(team)
                 .user(user)
-                .rol(teamRol)
+                .rol(rol)
                 .isLeader(isLeader)
                 .build();
         return teamMemberRepository.save(teamMember);
@@ -53,10 +52,10 @@ public class TeamMemberService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Teams team = teamService.getTeamById(idTeam)
                 .orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        Rol teamRol = Rol.valueOf(rol);
+
         teamMember.setTeam(team);
         teamMember.setUser(user);
-        teamMember.setRol(teamRol);
+        teamMember.setRol(rol);
         teamMember.setLeader(isLeader);
         return teamMemberRepository.save(teamMember);
     }
