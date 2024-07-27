@@ -51,13 +51,13 @@ public class JwtTokenGenerator {
         Set<String> permissions = new HashSet<>();
 
         if (roles.contains("ROLE_ADMIN")) {
-            permissions.addAll(List.of("READ", "WRITE", "DELETE"));
+            permissions.addAll(List.of("READ", "WRITE", "DELETE", "WRITE_TEAM"));
         }
         if (roles.contains("ROLE_MANAGER")) {
-            permissions.add("READ");
+            permissions.addAll(List.of("READ","WRITE_TEAM"));
         }
         if (roles.contains("ROLE_USER")) {
-            permissions.add("READ");
+            permissions.addAll(List.of("READ","WRITE_TEAM"));
         }
 
         return String.join(" ", permissions);
