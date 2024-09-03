@@ -51,7 +51,9 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final RefreshTokenRepository refreshTokenRepo;
     private final LogoutHandlerService logoutHandlerService;
 
-
+    /*
+    Security Configuration for Sign-In Endpoint
+     */
     @Order(1)
     @Bean
     public SecurityFilterChain signInSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -68,6 +70,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
+    /*
+    Security Configuration for API Endpoints
+     */
     @Order(2)
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -87,6 +93,9 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+    /*
+    Security Configuration for Refresh Token Endpoint
+     */
     @Order(3)
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -105,6 +114,9 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
+    /*
+    Security Configuration for Logout Endpoint
+     */
     @Order(4)
     @Bean
     public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -128,7 +140,9 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-
+    /*
+    Security Configuration for Sign-Up Endpoint
+     */
     @Order(5)
     @Bean
     public SecurityFilterChain registerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{

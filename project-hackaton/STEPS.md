@@ -209,4 +209,74 @@ public interface CompetitorRepository extends JpaRepository<Competitor, Long> {
 
 ### Quinta fase: Implementar Spring security y JWT
 
+- [x] Lo primero es crear una clase que implemente el UserDetails y UserDetailsService
+Dentro del paquete config->userConfig se van a crear las clases UserConfig y UserManagerConfig
+#### UserConfig Class
+Sirve para implementar la interfaz UserDetails y asi poder asignar las Authorities a los usuarios
+```java
+@RequiredArgsConstructor
+public class UserConfig implements UserDetails {
+    private final User user;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays
+                .stream(user
+                        .getRoles()
+                        .split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+}
+```
+
+#### UserManagerConfig Class
+Nos ayuda a poder guardar de manera segura los datos de los usuarios dentro de la base de datos
+```java
+@Service
+@RequiredArgsConstructor
+public class UserManagerConfig implements UserDetailsService {
+    private final UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository
+                .findByUsername(username)
+                .map(UserConfig::new)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                "Username: " + username + " does not exist"
+                        ));
+    }
+}
+```
