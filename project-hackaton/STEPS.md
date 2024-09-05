@@ -495,7 +495,7 @@ jwt:
 
 #### Septima fase: Crear los controladores de autentificacion
 
-Cremos el AuthController, para recibir la sign-in api
+Creamos el AuthController, para recibir la sign-in api
 ```java
 @RestController
 @RequiredArgsConstructor
@@ -511,5 +511,38 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.getJwtTokensAfterAuthentication(authentication, response));
     }
+   @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
+   @PostMapping ("/refresh-token")
+   public ResponseEntity<?> getAccessToken(
+           @RequestHeader(HttpHeaders.AUTHORIZATION)
+           String authorizationHeader){
+      return ResponseEntity.ok(authService.getAccessTokenUsingRefreshToken(authorizationHeader));
+   }
+
+   @PostMapping("/sign-up")
+   public ResponseEntity<?> registerUser(
+           @Valid @RequestBody UserRegistrationDto userRegistrationDto,
+           BindingResult bindingResult,
+           HttpServletResponse httpServletResponse
+   ){
+      log.info("[AuthController:registerUser]Signup Process Started for user:{}",userRegistrationDto.username());
+      if(bindingResult.hasErrors()){
+         List<String> errorMessage = bindingResult.getAllErrors().stream()
+                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                 .toList();
+         log.error("[AuthController:registerUser]Errors in user:{}",errorMessage);
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+      }
+      return  ResponseEntity.ok(authService.registerUser(userRegistrationDto,httpServletResponse));
+   }
 }
 ```
+
+#### Octava fase: Crear los Services de cada entidad
+
+- [x] UserService
+- [x] TeamService
+- [x] TeamMemberService
+- [x] EventService
+- [x] CompetitorService
+
