@@ -39,6 +39,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+
+/**
+ * Security configuration class for the application
+ * Configures security settings for different endpoints for more readability and maintainability
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -51,9 +57,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final RefreshTokenRepository refreshTokenRepo;
     private final LogoutHandlerService logoutHandlerService;
 
-    /*
-    Security Configuration for Sign-In Endpoint
+    /**
+     * Security configuration for the sign-in endpoint
+     * @param httpSecurity the HttpSecurity object to configure
+     * @return the SecurityFilterChain
+     * @throws Exception if an error occurs
      */
+
     @Order(1)
     @Bean
     public SecurityFilterChain signInSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -71,8 +81,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-    /*
-    Security Configuration for API Endpoints
+    /**
+     * Security configuration for API endpoints
+     *
+     * @param httpSecurity the HttpSecurity object to configure
+     * @return The SecurityFilterChain
+     * @throws Exception if an error occurs
      */
     @Order(2)
     @Bean
@@ -93,9 +107,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-    /*
-    Security Configuration for Refresh Token Endpoint
-     */
+
     @Order(3)
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -114,9 +126,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
-    /*
-    Security Configuration for Logout Endpoint
-     */
+
     @Order(4)
     @Bean
     public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -140,9 +150,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-    /*
-    Security Configuration for Sign-Up Endpoint
-     */
+
     @Order(5)
     @Bean
     public SecurityFilterChain registerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
