@@ -541,6 +541,13 @@ public class AuthController {
 #### Octava fase: Crear los Services de cada entidad
 
 - [x] UserService
+La clase UserService tiene como logica de negocio el buscar usuarios dentro de la base de datos.
+Con las siguientes operaciones:
+  - findById(Long id)   
+      Busca y devuelve la informacion del usuario por su id.
+  - findByUsername(String username)
+  - findByEmail(String email)
+  - findAll()
 - [x] TeamService
 - [x] TeamMemberService
 - [x] EventService
