@@ -42,3 +42,7 @@ spring:
 jwt:
   rsa-private-key: classpath:certs/privateKey.pem
   rsa-public-key: classpath:certs/publicKey.pem
+
+  expiration-time:
+    access-token: 3600
+    refresh-token: 1296000

@@ -546,8 +546,11 @@ Con las siguientes operaciones:
   - findById(Long id)   
       Busca y devuelve la informacion del usuario por su id.
   - findByUsername(String username)
+      Busca y devuelve la informacion del usuario por su nombre de usuario.
   - findByEmail(String email)
+      Busca y devuelve la informacion del usuario por su email.
   - findAll()
+      Devuelve una lista con todos los usuarios registrados.
 - [x] TeamService
 - [x] TeamMemberService
 - [x] EventService
