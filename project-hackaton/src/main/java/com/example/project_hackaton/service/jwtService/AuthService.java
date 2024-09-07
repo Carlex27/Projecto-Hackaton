@@ -12,12 +12,14 @@ import com.example.project_hackaton.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
@@ -122,14 +124,13 @@ public class AuthService {
         return new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(authorities));
     }
 
+    @Transactional
     public AuthResponseDto registerUser(UserRegistrationDto userRegistrationDto, HttpServletResponse httpServletResponse){
         try{
             log.info("[AuthService:registerUser]User Registration Started with :::{}",userRegistrationDto);
 
             Optional<User> user = userInfoRepo.findByUsername(userRegistrationDto.userEmail());
-            if(user.isPresent()){
-                throw new Exception("User already exists");
-            }
+
 
             User userDetailsEntity = userInfoMapper.convertToEntity(userRegistrationDto);
             Authentication authentication = createAuthenticationObject(userDetailsEntity);
@@ -138,6 +139,9 @@ public class AuthService {
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
 
             User savedUserDetails = userInfoRepo.save(userDetailsEntity);
+            if(user.isPresent()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+            }
             saveUserRefreshToken(userDetailsEntity, refreshToken);
 
             creatRefreshTokenCookie(httpServletResponse, refreshToken);
@@ -150,7 +154,9 @@ public class AuthService {
                     .tokenType(TokenType.Bearer)
                     .build();
 
-
+        } catch (ResponseStatusException e) {
+            log.error("[AuthService:registerUser]Exception while registering the user due to :" + e.getMessage());
+            throw e;
         } catch (Exception e) {
             log.error("[AuthService:registerUser]Exception while registering the user due to :"+e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());

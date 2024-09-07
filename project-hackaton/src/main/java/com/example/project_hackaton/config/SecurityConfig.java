@@ -13,6 +13,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+
+/**
+ * Security configuration class for the application
+ * Configures security settings for different endpoints for more readability and maintainability
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -51,6 +58,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final RefreshTokenRepository refreshTokenRepo;
     private final LogoutHandlerService logoutHandlerService;
 
+    /**
+     * Security configuration for the sign-in endpoint
+     * @param httpSecurity the HttpSecurity object to configure
+     * @return the SecurityFilterChain
+     * @throws Exception if an error occurs
+     */
 
     @Order(1)
     @Bean
@@ -68,6 +81,14 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
+    /**
+     * Security configuration for API endpoints
+     *
+     * @param httpSecurity the HttpSecurity object to configure
+     * @return The SecurityFilterChain
+     * @throws Exception if an error occurs
+     */
     @Order(2)
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -87,6 +108,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+
     @Order(3)
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -105,6 +127,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
     @Order(4)
     @Bean
     public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {

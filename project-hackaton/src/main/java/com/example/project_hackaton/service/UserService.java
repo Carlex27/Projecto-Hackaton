@@ -5,6 +5,7 @@ import com.example.project_hackaton.repository.UserRepository;
 import com.example.project_hackaton.service.interfaces.IUserSearchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

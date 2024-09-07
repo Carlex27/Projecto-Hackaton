@@ -21,11 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * AuthController is responsible for handling the authentication and authorization of the user.
+ */
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+
+    /**
+     * This method is responsible for authenticating the user and generating the JWT tokens.
+     *
+     * @param authentication
+     * @param response
+     * @return
+     */
 
     @PostMapping("/sign-in")
     public ResponseEntity<?> authenticateUser(
@@ -35,7 +47,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.getJwtTokensAfterAuthentication(authentication, response));
     }
 
-
+    /**
+     * This method is responsible for generating the access token using the refresh token.
+     * @param authorizationHeader
+     * @return
+     */
     @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
     @PostMapping ("/refresh-token")
     public ResponseEntity<?> getAccessToken(
@@ -43,6 +59,20 @@ public class AuthController {
             String authorizationHeader){
         return ResponseEntity.ok(authService.getAccessTokenUsingRefreshToken(authorizationHeader));
     }
+
+    /**
+     * This method is responsible for registering the user.
+     * {
+     *     "username": "username",
+     *     "userEmail": "emailUser",
+     *     "userPassword": "password",
+     *     "userRole": "ROLE_USER" / ROLE_ADMIN / ROLE_MANAGER
+     * }
+     * @param userRegistrationDto
+     * @param bindingResult
+     * @param httpServletResponse
+     * @return
+     */
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> registerUser(
