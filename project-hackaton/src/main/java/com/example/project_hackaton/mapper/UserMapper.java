@@ -6,11 +6,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * UserMapper class
+ */
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Convert UserRegistrationDto to User
+     * @param userRegistrationDto
+     * @return
+     */
     public User convertToEntity(UserRegistrationDto userRegistrationDto){
         return User.builder()
                 .username(userRegistrationDto.username())

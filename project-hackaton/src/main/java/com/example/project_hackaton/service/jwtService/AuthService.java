@@ -177,8 +177,9 @@ public class AuthService {
         try{
             log.info("[AuthService:registerUser]User Registration Started with :::{}",userRegistrationDto);
 
-            Optional<User> user = userInfoRepo.findByUsername(userRegistrationDto.userEmail());
-
+            if(userVerificacion(userRegistrationDto)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or email already exists");
+            }
 
             User userDetailsEntity = userInfoMapper.convertToEntity(userRegistrationDto);
             Authentication authentication = createAuthenticationObject(userDetailsEntity);
@@ -187,9 +188,7 @@ public class AuthService {
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
 
             User savedUserDetails = userInfoRepo.save(userDetailsEntity);
-            if(user.isPresent()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
-            }
+
             saveUserRefreshToken(userDetailsEntity, refreshToken);
 
             creatRefreshTokenCookie(httpServletResponse, refreshToken);
@@ -209,5 +208,24 @@ public class AuthService {
             log.error("[AuthService:registerUser]Exception while registering the user due to :"+e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
+    }
+
+    /**
+     * This method is responsible for verifying the user.
+     * if the user already exists then it will return true.
+     * if the email already exists then it will return true.
+     * @param userRegistrationDto
+     * @return
+     */
+    private boolean userVerificacion(UserRegistrationDto userRegistrationDto) {
+        if(userInfoRepo.existsByUsername(userRegistrationDto.username())){
+            log.error("[AuthService:userVerificacion]User:{} already exists",userRegistrationDto.username());
+            return true;
+        }
+        if (userInfoRepo.existsByEmail(userRegistrationDto.userEmail())){
+            log.error("[AuthService:userVerificacion]Email:{} already exists",userRegistrationDto.userEmail());
+            return true;
+        }
+        return false;
     }
 }
