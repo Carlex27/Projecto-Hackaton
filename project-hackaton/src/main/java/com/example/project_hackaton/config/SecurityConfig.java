@@ -108,7 +108,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-
+    /**
+     * Security configuration for the refresh token endpoint
+     * @param httpSecurity
+     * @return The SecurityFilterChain
+     * @throws Exception
+     */
     @Order(3)
     @Bean
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -128,6 +133,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+    /**
+     * Security configuration for the logout endpoint
+     * Logs out the user and clears the security context
+     * @param httpSecurity
+     * @return
+     * @throws Exception
+     */
     @Order(4)
     @Bean
     public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -151,7 +163,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
-
+    /**
+     * Security configuration for the sign-up endpoint
+     * Disables CSRF and allows all requests
+     * @param httpSecurity
+     * @return
+     * @throws Exception
+     */
     @Order(5)
     @Bean
     public SecurityFilterChain registerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -164,16 +182,28 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+    /**
+     * Bean for password encoder
+     * @return PasswordEncoder
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bean for JwtDecoder
+     * @return JwtDecoder
+     */
     @Bean
     JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
     }
 
+    /**
+     * Bean for JwtEncoder
+     * @return
+     */
     @Bean
     JwtEncoder jwtEncoder(){
         JWK jwk = new RSAKey.Builder(rsaKeyRecord.rsaPublicKey()).privateKey(rsaKeyRecord.rsaPrivateKey()).build();

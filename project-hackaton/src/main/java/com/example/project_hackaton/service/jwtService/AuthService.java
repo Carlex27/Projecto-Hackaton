@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,20 +26,41 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * AuthService class is responsible for authenticating the user and generating the jwt tokens
+ * for the user. It also provides the functionality to generate the access token using the refresh token.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    @Value("${jwt.expiration-time.access-token}")
+    private int ACCESS_TOKEN_EXPIRY;
+
+    @Value("${jwt.expiration-time.refresh-token}")
+    private int REFRESH_TOKEN_EXPIRY;
+
     private final UserRepository userInfoRepo;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final RefreshTokenRepository refreshTokenRepo;
     private final UserMapper userInfoMapper;
 
+    /**
+     * This method is responsible for authenticating the user and generating the jwt tokens
+     * for the user. Refresh token is also generated and saved in the database.
+     * Access token is generated and returned to the user.
+     * @param authentication
+     * @param response
+     * @return AuthResponseDto
+     */
     public AuthResponseDto getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
         try {
+
             var user = userInfoRepo.findByUsername(authentication.getName())
                     .orElseThrow(() -> {
+
                         log.error("[AuthService:userSignInAuth] User :{} not found", authentication.getName());
+
                         return new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND ");
                     });
 
@@ -47,15 +69,15 @@ public class AuthService {
 
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
 
-
             creatRefreshTokenCookie(response, refreshToken);
 
             saveUserRefreshToken(user, refreshToken);
 
             log.info("[AuthService:userSignInAuth] Access token for user:{}, has been generated", user.getUsername());
+
             return AuthResponseDto.builder()
                     .accessToken(accessToken)
-                    .accessTokenExpiry(15 * 60)
+                    .accessTokenExpiry(ACCESS_TOKEN_EXPIRY)
                     .userName(user.getUsername())
                     .tokenType(TokenType.Bearer)
                     .build();
@@ -67,6 +89,11 @@ public class AuthService {
         }
     }
 
+    /**
+     * This method is responsible for saving the refresh token in the database.
+     * @param userInfoEntity
+     * @param refreshToken
+     */
     private void saveUserRefreshToken(User userInfoEntity, String refreshToken) {
         var refreshTokenEntity = RefreshTokenEntity.builder()
                 .user(userInfoEntity)
@@ -76,16 +103,26 @@ public class AuthService {
         refreshTokenRepo.save(refreshTokenEntity);
     }
 
+    /**
+     * This method is responsible for creating the refresh token cookie.
+     * @param response
+     * @param refreshToken
+     * @return
+     */
     private Cookie creatRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setMaxAge(15 * 24 * 60 * 60);
+        refreshTokenCookie.setMaxAge(REFRESH_TOKEN_EXPIRY);
         response.addCookie(refreshTokenCookie);
         return refreshTokenCookie;
     }
 
-
+    /**
+     * This method is responsible for generating the access token using the refresh token.
+     * @param authorizationHeader
+     * @return
+     */
     public Object getAccessTokenUsingRefreshToken(String authorizationHeader) {
         if (!authorizationHeader.startsWith(TokenType.Bearer.name())) {
             return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please verify your token type");
@@ -104,13 +141,18 @@ public class AuthService {
 
         return AuthResponseDto.builder()
                 .accessToken(accessToken)
-                .accessTokenExpiry(5 * 60)
+                .accessTokenExpiry(ACCESS_TOKEN_EXPIRY)
                 .userName(user.getUsername())
                 .tokenType(TokenType.Bearer)
                 .build();
 
     }
 
+    /**
+     * This method is responsible for creating the authentication object.
+     * @param userInfoEntity
+     * @return
+     */
     private static Authentication createAuthenticationObject(User userInfoEntity){
         String username = userInfoEntity.getUsername();
         String password = userInfoEntity.getPassword();
@@ -124,7 +166,13 @@ public class AuthService {
         return new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(authorities));
     }
 
-    @Transactional
+    /**
+     * This method is responsible for registering the user.
+     * @param userRegistrationDto
+     * @param httpServletResponse
+     * @return
+     */
+
     public AuthResponseDto registerUser(UserRegistrationDto userRegistrationDto, HttpServletResponse httpServletResponse){
         try{
             log.info("[AuthService:registerUser]User Registration Started with :::{}",userRegistrationDto);
@@ -149,13 +197,13 @@ public class AuthService {
             log.info("[AuthService:registerUser] User:{} Successfully registered",savedUserDetails.getUsername());
             return AuthResponseDto.builder()
                     .accessToken(accessToken)
-                    .accessTokenExpiry(5 * 60)
+                    .accessTokenExpiry(REFRESH_TOKEN_EXPIRY)
                     .userName(savedUserDetails.getUsername())
                     .tokenType(TokenType.Bearer)
                     .build();
 
         } catch (ResponseStatusException e) {
-            log.error("[AuthService:registerUser]Exception while registering the user due to :" + e.getMessage());
+            log.error("[AuthService:registerUser]ResponseStatusException while registering the user due to :" + e.getMessage());
             throw e;
         } catch (Exception e) {
             log.error("[AuthService:registerUser]Exception while registering the user due to :"+e.getMessage());

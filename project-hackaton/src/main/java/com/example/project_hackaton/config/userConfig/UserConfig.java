@@ -11,10 +11,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * User configuration class
+ * Implements UserDetails
+ * Used for loading user details
+ *
+ */
 @RequiredArgsConstructor
 public class UserConfig implements UserDetails {
     private final User user;
 
+    /**
+     * Get user authorities
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays

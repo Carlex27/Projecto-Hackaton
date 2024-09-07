@@ -16,12 +16,25 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Jwt token generator class
+ * Contains
+ * - generateAccessToken
+ * - generateRefreshToken
+ * - getRolesOfUser
+ * - getPermissionsFromRoles
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenGenerator {
     private final JwtEncoder jwtEncoder;
 
+    /**
+     * Generate access token for user authentication
+     * @param authentication
+     * @return
+     */
     public String generateAccessToken(Authentication authentication) {
 
         log.info("[JwtTokenGenerator:generateAccessToken] Token Creation Started for:{}", authentication.getName());
@@ -41,12 +54,22 @@ public class JwtTokenGenerator {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
+    /**
+     * Get roles of user
+     * @param authentication
+     * @return
+     */
     private static String getRolesOfUser(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
     }
 
+    /**
+     * Get permissions from roles
+     * @param roles
+     * @return
+     */
     private String getPermissionsFromRoles(String roles) {
         Set<String> permissions = new HashSet<>();
 
@@ -63,6 +86,11 @@ public class JwtTokenGenerator {
         return String.join(" ", permissions);
     }
 
+    /**
+     * Generate refresh token for user authentication
+     * @param authentication
+     * @return
+     */
 
     public String generateRefreshToken(Authentication authentication){
         log.info("[JwtTokenGenerator:generateRefreshToken] Token Creation Started for:{}", authentication.getName());

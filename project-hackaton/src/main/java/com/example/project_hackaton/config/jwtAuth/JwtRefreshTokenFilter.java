@@ -25,13 +25,29 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
+/**
+ * Jwt refresh token filter class
+ * Filter class to check the refresh token and authenticate the user
+ * Extends OncePerRequestFilter
+ * Contains
+ * - doFilterInternal
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class JwtRefreshTokenFilter extends OncePerRequestFilter {
+
     private final RSAKeyRecord rsaKeyRecord;
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepo;
 
+    /**
+     * Filter method to check the refresh token and authenticate the user
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
@@ -43,21 +59,29 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
+            // Check if the Authorization header is present and starts with Bearer
             if(!authHeader.startsWith("Bearer ")){
+                // If not present, pass the request to the next filter
                 filterChain.doFilter(request, response);
                 return;
             }
 
+
             final String token = authHeader.substring(7);
+
             final Jwt jwtRefreshToken = jwtDecoder.decode(token);
 
             final String userName = jwtTokenUtils.getUserName(jwtRefreshToken);
 
+            // Check if the username is not empty and the user is not already authenticated
             if(!userName.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null){
+
                 var isRefreshTokenValidInDatabase = refreshTokenRepo.findByRefreshToken(jwtRefreshToken.getTokenValue())
                         .map(refreshTokenEntity -> !refreshTokenEntity.isRevoked())
                         .orElse(false);
+
                 UserDetails userDetails = jwtTokenUtils.userDetails(userName);
+
                 if(jwtTokenUtils.isTokenValid(jwtRefreshToken, userDetails) && isRefreshTokenValidInDatabase){
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 
@@ -68,14 +92,22 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
                     );
 
                     createdToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
                     securityContext.setAuthentication(createdToken);
+
                     SecurityContextHolder.setContext(securityContext);
+
                 }
             }
+
             log.info("[JwtRefreshTokenFilter:doFilterInternal] Completed");
+
             filterChain.doFilter(request, response);
+
         }catch (JwtValidationException jwtValidationException){
+
             log.error("[JwtRefreshTokenFilter:doFilterInternal] Exception due to :{}",jwtValidationException.getMessage());
+
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,jwtValidationException.getMessage());
         }
     }
