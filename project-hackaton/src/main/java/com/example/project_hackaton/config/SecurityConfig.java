@@ -1,5 +1,7 @@
 package com.example.project_hackaton.config;
 
+import com.example.project_hackaton.config.handlers.CustomAccessDeniedHandler;
+import com.example.project_hackaton.config.handlers.CustomAuthenticationEntryPoint;
 import com.example.project_hackaton.config.jwtAuth.JwtAccessTokenFilter;
 import com.example.project_hackaton.config.jwtAuth.JwtRefreshTokenFilter;
 import com.example.project_hackaton.config.jwtAuth.JwtTokenUtils;
@@ -57,6 +59,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepo;
     private final LogoutHandlerService logoutHandlerService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     /**
      * Security configuration for the sign-in endpoint
@@ -75,8 +79,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .userDetailsService(userInfoManagerConfig)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> {
-                    ex.authenticationEntryPoint((request, response, authException) ->
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
+                    ex.authenticationEntryPoint(customAuthenticationEntryPoint);
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();
@@ -101,8 +104,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
                     log.error("[SecurityConfig:apiSecurityFilterChain] Exception due to :{}",ex);
-                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                    ex.authenticationEntryPoint(customAuthenticationEntryPoint);
+                    ex.accessDeniedHandler(customAccessDeniedHandler);
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();
@@ -126,8 +129,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .addFilterBefore(new JwtRefreshTokenFilter(rsaKeyRecord,jwtTokenUtils,refreshTokenRepo), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
                     log.error("[SecurityConfig:refreshTokenSecurityFilterChain] Exception due to :{}",ex);
-                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                    ex.authenticationEntryPoint(customAuthenticationEntryPoint);
+                    ex.accessDeniedHandler(customAccessDeniedHandler);
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();
@@ -151,14 +154,17 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord,jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
+                        // Set the logout URL
                         .logoutUrl("/logout")
+                        // Add the logout handler
                         .addLogoutHandler(logoutHandlerService)
+                        // Clear the security context
                         .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
                 )
                 .exceptionHandling(ex -> {
                     log.error("[SecurityConfig:logoutSecurityFilterChain] Exception due to :{}",ex);
-                    ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint());
-                    ex.accessDeniedHandler(new BearerTokenAccessDeniedHandler());
+                    ex.authenticationEntryPoint(customAuthenticationEntryPoint);
+                    ex.accessDeniedHandler(customAccessDeniedHandler);
                 })
                 .build();
     }
