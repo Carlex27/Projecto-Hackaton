@@ -591,5 +591,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler, Serializa
 
 
 #### decima fase: Logica de negocio de los controladores
+El controlador AuthController, ya esta implementado y consiste en registrar, logear y autenticar usuarios
+en la aplicacion.
 
+El UserController se va a utilzar para poder acceder a los datos de los usuarios dentro de la base de datos, esto con 
+fines de monitoreo y control de los usuarios registrados en la aplicacion.
+```java
+
+```
 

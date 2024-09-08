@@ -1,6 +1,7 @@
 package com.example.project_hackaton.entity;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,17 +27,23 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Username of the user", example = "user123", requiredMode = Schema.RequiredMode.REQUIRED )
     @Column(unique = true, nullable = false)
     private String username;
+
+    @Schema(description = "Email of the user", example = "email@user.com", requiredMode = Schema.RequiredMode.REQUIRED )
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Schema(description = "Password of the user", example = "password", requiredMode = Schema.RequiredMode.REQUIRED )
     @Column(nullable = false)
     private String password;
 
+    @Schema(description = "Role of the User", example = "ROLE_USER / ROLE_MANAGER / ROLE_ADMIN", requiredMode = Schema.RequiredMode.REQUIRED )
     @Column(nullable = false)
     private String roles;
 
+    @Schema(description = "JWT refresh token of the user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private  List<RefreshTokenEntity> refreshTokens;
 
