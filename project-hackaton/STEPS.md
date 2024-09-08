@@ -556,3 +556,6 @@ Con las siguientes operaciones:
 - [x] EventService
 - [x] CompetitorService
 
+#### Novena fase: Logica de negocio de los controladores
+
+

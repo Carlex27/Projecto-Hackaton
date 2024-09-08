@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @PreAuthorize("hasAuthority('SCOPE_READ_DB')")
     @GetMapping("/all")
     public ResponseEntity<?> allUsers(
 
@@ -20,7 +20,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @PreAuthorize("hasAuthority('SCOPE_READ_DB')")
     @GetMapping("/find/{id}")
     public ResponseEntity<?> findUserById(
             @PathVariable Long id
@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @PreAuthorize("hasAuthority('SCOPE_READ_DB')")
     @GetMapping("/find/username/{username}")
     public ResponseEntity<?> findUserByUsername(
             @PathVariable String username
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findByUsername(username));
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @PreAuthorize("hasAuthority('SCOPE_READ_DB')")
     @GetMapping("/find/email/{email}")
     public ResponseEntity<?> findUserByEmail(
             @PathVariable String email

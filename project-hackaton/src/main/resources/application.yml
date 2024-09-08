@@ -28,10 +28,9 @@ spring:
     oauth2:
       client:
         registration:
-          google:
+          github:
             client-id: your-client-id
             client-secret: your-client-secret
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
       resourceserver:
         jwt:
           issuer-uri: https://your-identity-provider.com

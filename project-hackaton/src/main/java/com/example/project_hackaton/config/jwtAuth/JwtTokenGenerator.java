@@ -67,6 +67,13 @@ public class JwtTokenGenerator {
 
     /**
      * Get permissions from roles
+     * Permissions:
+     * - READ_DB: Read User info from database
+     * - WRITE: Write User info to database
+     * - DELETE: Delete User info from database
+     * - WRITE_TEAM: Write Team info to database
+     * - READ: Read Team info from database
+     *
      * @param roles
      * @return
      */
@@ -74,10 +81,10 @@ public class JwtTokenGenerator {
         Set<String> permissions = new HashSet<>();
 
         if (roles.contains("ROLE_ADMIN")) {
-            permissions.addAll(List.of("READ", "WRITE", "DELETE", "WRITE_TEAM"));
+            permissions.addAll(List.of("READ_DB", "WRITE", "DELETE", "WRITE_TEAM"));
         }
         if (roles.contains("ROLE_MANAGER")) {
-            permissions.addAll(List.of("READ","WRITE_TEAM"));
+            permissions.addAll(List.of("READ_DB","WRITE_TEAM"));
         }
         if (roles.contains("ROLE_USER")) {
             permissions.addAll(List.of("READ","WRITE_TEAM"));
