@@ -556,6 +556,40 @@ Con las siguientes operaciones:
 - [x] EventService
 - [x] CompetitorService
 
-#### Novena fase: Logica de negocio de los controladores
+
+#### Novena fase: crear los handlers de las exceptiones
+- CustomAccessDeniedHandler
+Estos son los handlers encargados de capturar las excepciones y devolver un mensaje de error personalizado.
+Al momento de intentar acceder a un recurso sin los permisos necesarios o sin haber autenticado.
+```java 
+@Component
+@Slf4j
+public class CustomAccessDeniedHandler implements AccessDeniedHandler, Serializable {
+    @Override
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        log.error("[CustomAccessDeniedHandler:handle] Access denied: {}", accessDeniedException.getMessage());
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+    }
+}
+```
+- CustomAuthenticationEntryPoint
+```java
+@Component
+  @Slf4j
+  public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
+  @Override
+  public void commence(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AuthenticationException authException) throws IOException, ServletException {
+        log.error("[CustomAuthenticationEntryPoint:commence] Unauthorizen request: {}", authException.getMessage());
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+  }
+}
+```
+
+
+#### decima fase: Logica de negocio de los controladores
 
 

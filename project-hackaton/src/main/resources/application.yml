@@ -45,3 +45,9 @@ jwt:
   expiration-time:
     access-token: 3600
     refresh-token: 1296000
+
+server:
+  error:
+    include-exception: false
+    include-message: never
+    include-stacktrace: never
