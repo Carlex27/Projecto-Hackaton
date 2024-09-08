@@ -3,6 +3,12 @@ package com.example.project_hackaton.controller;
 
 import com.example.project_hackaton.dto.UserRegistrationDto;
 import com.example.project_hackaton.service.jwtService.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +41,13 @@ public class AuthController {
     /**
      * This method is responsible for authenticating the user and generating the JWT tokens.
      *
+     *
      * @param authentication
      * @param response
      * @return
      */
 
+    @Operation(summary = "Authenticate and login an USER")
     @PostMapping("/sign-in")
     public ResponseEntity<?> authenticateUser(
             Authentication authentication,
@@ -53,6 +61,7 @@ public class AuthController {
      * @param authorizationHeader
      * @return
      */
+    @Operation(summary = "Get Access Token using Refresh Token")
     @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
     @PostMapping ("/refresh-token")
     public ResponseEntity<?> getAccessToken(
@@ -74,10 +83,42 @@ public class AuthController {
      * @param httpServletResponse
      * @return
      */
+
+    @Operation(summary = "Register a user"
+                ,description = "This endpoint is responsible for registering the user.",
+                parameters = {
+                     @Parameter(name = "userRegistrationDto", description = "User Registration DTO", required = true)
+                },
+                requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                        description = "User Registration DTO",
+                        required = true,
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "UserRegistrationDto example",
+                                        summary = "An real example for user registration",
+                                        value = """
+                                                {
+                                                    "username": "username1",
+                                                    "userEmail": "email@user.com",
+                                                    "userPassword": "password",
+                                                    "userRole": "ROLE_USER"
+                                                }"""
+                                )
+                        )
+                )
+    )
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request, the email or username is already taken")
+    })
     @Transactional
     @PostMapping("/sign-up")
     public ResponseEntity<?> registerUser(
+
             @Valid @RequestBody UserRegistrationDto userRegistrationDto,
+
             BindingResult bindingResult,
             HttpServletResponse httpServletResponse
     ){
