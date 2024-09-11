@@ -20,8 +20,6 @@ public class UserController {
     public ResponseEntity<?> allUsers(
 
     ){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("User with username: " + username + " is trying to get all users");
         return ResponseEntity.ok(userService.findAll());
     }
 

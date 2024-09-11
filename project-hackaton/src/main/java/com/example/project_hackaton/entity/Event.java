@@ -21,7 +21,9 @@ public class Event {
 
     @Lob
     private String description;
+
     private LocalDateTime startDate;
+
     private LocalDateTime endDate;
 
     @ManyToOne
