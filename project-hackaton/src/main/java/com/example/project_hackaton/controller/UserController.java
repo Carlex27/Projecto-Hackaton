@@ -20,8 +20,12 @@ public class UserController {
     public ResponseEntity<?> allUsers(
 
     ){
+<<<<<<< HEAD
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("User with username: " + username + " is trying to get all users");
+=======
+
+>>>>>>> 90643c180f265485b26be7bbac5f34f871ef9de2
         return ResponseEntity.ok(userService.findAll());
     }
 
@@ -48,7 +52,5 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.findByEmail(email));
     }
-
-
 
 }
