@@ -17,6 +17,7 @@ public class UserController {
     public ResponseEntity<?> allUsers(
 
     ){
+
         return ResponseEntity.ok(userService.findAll());
     }
 
@@ -43,7 +44,5 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.findByEmail(email));
     }
-
-
 
 }
