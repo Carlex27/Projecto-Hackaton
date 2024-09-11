@@ -188,6 +188,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+
     /**
      * Bean for password encoder
      * @return PasswordEncoder
