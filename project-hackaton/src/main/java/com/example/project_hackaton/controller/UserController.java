@@ -2,13 +2,16 @@ package com.example.project_hackaton.controller;
 
 import com.example.project_hackaton.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -17,6 +20,8 @@ public class UserController {
     public ResponseEntity<?> allUsers(
 
     ){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("User with username: " + username + " is trying to get all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
@@ -43,7 +48,5 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.findByEmail(email));
     }
-
-
 
 }

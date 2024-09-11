@@ -1,6 +1,7 @@
 package com.example.project_hackaton.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,7 @@ public class User{
 
     @Schema(description = "JWT refresh token of the user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private  List<RefreshTokenEntity> refreshTokens;
 
 
