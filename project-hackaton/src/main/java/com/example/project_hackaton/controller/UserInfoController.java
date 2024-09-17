@@ -27,7 +27,7 @@ public class UserInfoController {
                 .getAuthentication()
                 .getName();
 
-        
+
         log.info("User info for user: {}", username);
         return ResponseEntity.ok(userInfoService.getUserInfo(username));
 
